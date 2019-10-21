@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="admin/common/head"></head>
+<title>管理员管理</title>
+<link rel="stylesheet" th:href="@{/common/css/links.css}">
+
+<body>
+    <!-- vue入口 -->
+    <div id="app">
+        <div :class="'app-wrapper' + sidebarFlag">
+            <!-- aside -->
+            <div th:replace="admin/common/side"></div>
+
+            <!-- container -->
+            <el-container class="main-container">
+                <!-- header -->
+                <div style="background-color: rgb(84, 92, 100);" th:replace="admin/common/header"></div>
+
+                <!-- main -->
+                <el-main class="app-main">
+                    <el-card>
+                        <h2>管理员管理</h2>
+                        <!-- 功能按钮 -->
+                        <el-row :gutter="20">
+                            <el-col :xs="12" :sm="12" :lg="6" :span="6" style="display: flex">
+                                <el-input placeholder="请输入管理员账号查询" size="small" v-model="searchEntity.adminNumber"
+                                    @keyup.native="search(pageConf.pageCode, pageConf.pageSize)">
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
+                                <el-button @click="search(pageConf.pageCode, pageConf.pageSize)" plain size="small"
+                                    style="margin-left:12px;" icon="el-icon-search"></el-button>
+                            </el-col>
+                            <el-col :xs="12" :sm="12" :lg="6" :span="6" style="float: right;text-align: right">
+                                <el-button size="small" plain type="primary" @click="handleAdd" icon="el-icon-plus">
+                                    添加
+                                </el-button>
+                                <el-button type="primary" plain size="small"
+                                    @click="search(pageConf.pageCode, pageConf.pageSize)" icon="el-icon-refresh">
+                                </el-button>
+                            </el-col>
+                        </el-row>
+                        <br />
+                        <!-- 列表 -->
+                        <el-table ref="link" :data="admins" border tooltip-effect="dark" style="width: 100%">
+                            <el-table-column align="center" type="index" width="80"></el-table-column>
+                            <el-table-column align="center" prop="adminNumber" label="管理员账号" width="170" show-overflow-tooltip></el-table-column>
+                            <el-table-column align="center" prop="createTime" sortable :formatter="dateFormat" label="创建时间" width="170"></el-table-column>
+                            <el-table-column align="center" prop="lastEditTime" sortable :formatter="dateFormat" label="最后编辑时间" width="170"></el-table-column>
+                            <el-table-column align="center" prop="enableStatus" sortable label="状态" width="120">
+                                <template slot-scope="scope">
+                                    <el-tag v-if="scope.row.enableStatus == 1">审核通过</el-tag>
+                                    <el-tag type="success" v-if="scope.row.enableStatus == 2">待审核</el-tag>
+                                    <el-tag type="danger" v-if="scope.row.enableStatus == 3">未通过审核</el-tag>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作" align="center">
+                                <template slot-scope="scope">
+                                    <el-button icon="el-icon-delete" size="mini" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
+                                    <el-button style="margin-left:0;" size="mini" icon="el-icon-edit" type="warning" @click="handleEdit(scope.row.id, scope.row.adminNumber)">编辑信息</el-button>
+                                    <el-button style="margin-left:0;" size="mini" icon="el-icon-edit" type="warning" @click="handleChangeStatus(scope.row.id, scope.row.adminNumber, scope.row.enableStatus)">更新状态</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <br />
+                        <!-- 分页 -->
+                        <div class="pagination">
+                            <el-pagination background @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange" :current-page="pageConf.pageCode"
+                                :page-sizes="pageConf.pageOption" :page-size="pageConf.pageSize"
+                                layout="total, sizes, prev, pager, next, jumper" :total="pageConf.totalPage">
+                            </el-pagination>
+                        </div>
+                    </el-card>
+                </el-main>
+            </el-container>
+        </div>
+
+        <!-- 添加管理员 -->
+        <el-dialog title="添加管理员账号" :visible.sync="addDialog" width="30%" :append-to-body='true'
+                   :before-close="handleAddClose">
+            <span>
+                <el-form :inline="true" :model="addEditor">
+                    <el-form-item required prop="adminNumber" :rules="[{ required: true, message: '请输入管理员账号'}]" label="管理员账号">
+                        <el-input style="width: 200px" v-model="addEditor.adminNumber" placeholder="请输入管理员账号"></el-input>
+                    </el-form-item>
+                    <el-form-item required prop="adminPasswd" :rules="[{ required: true, message: '请输入管理员密码'}]" label="管理员密码">
+                        <el-input style="width: 200px" v-model="addEditor.adminPasswd" placeholder="请输入管理员密码"></el-input>
+                    </el-form-item>
+                </el-form>
+            </span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="addDialog = false">取 消</el-button>
+                <el-button type="primary" @click="add">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 编辑 -->
+        <el-dialog title="编辑信息" :visible.sync="editDialog" width="30%" :append-to-body='true'
+            :before-close="handleEditClose">
+            <span>
+                <el-form :inline="true" :model="editor">
+                    <el-form-item required prop="adminNumber" :rules="[{ required: true, message: '请输入管理员账号'}]" label="管理员账号">
+                        <el-input style="width: 200px" v-model="editor.adminNumber" placeholder="请输入管理员账号"></el-input>
+                    </el-form-item>
+                    <el-form-item required prop="adminPasswd" :rules="[{ required: true, message: '请输入管理员密码'}]" label="管理员密码">
+                        <el-input style="width: 200px" v-model="editor.adminPasswd" placeholder="请输入管理员密码"></el-input>
+                    </el-form-item>
+                </el-form>
+            </span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editDialog = false">取 消</el-button>
+                <el-button type="primary" @click="edit">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 更新状态 -->
+        <el-dialog title="编辑信息" :visible.sync="changeStatusDialog" width="30%" :append-to-body='true'
+                   :before-close="handleChangeStatusClose">
+            <span>
+                <p v-if="changeStatusEditor.adminNumber != ''">管理员账号: {{changeStatusEditor.adminNumber}}</p>
+                <el-form :inline="true" :model="changeStatusEditor">
+                    <el-form-item label="状态">
+                        <el-select v-model="changeStatusEditor.enableStatus" style="width: 120px">
+                            <el-option label="审核通过" :value="1"></el-option>
+                            <el-option label="待审核" :value="2"></el-option>
+                            <el-option label="未通过审核" :value="3"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+            </span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="changeStatusDialog = false">取 消</el-button>
+                <el-button type="primary" @click="changeStatus">确 定</el-button>
+            </span>
+        </el-dialog>
+    </div>
+</body>
+<div th:replace="admin/common/js"></div>
+<script type="text/javascript" th:src="@{/common/js/admin/admin.js}"></script>
+
+</html>

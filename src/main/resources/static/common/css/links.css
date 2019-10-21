@@ -1,0 +1,30 @@
+.card-category{
+    margin-bottom: 35px;
+}
+.card-category > .el-card__header {
+    background-color: #409EFF;
+    font-size: 15px;
+    color: #fff;
+}
+table{
+    font-size: 14px;
+    color: #606266;
+    border:1px solid grey;
+}
+tr>:nth-child(1){
+    color:#909399;
+    font-size:14px;
+    width:169px;
+    word-wrap: break-word;
+    text-align: center;
+    padding: 0 10px;
+    box-sizing: border-box;
+    text-rendering: optimizeLegibility;
+    font-weight: bold;
+    margin-top: -1px;
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+tr>:nth-last-child(1){
+    font-size:14px;
+    text-align: center;
+}

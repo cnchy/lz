@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iotlab.integrityarchives.dao.AdminDao">
+
+
+    <select id="countAdminNumber" parameterType="String" resultType="int">
+        select count(admin_number)
+        from tb_admin
+        where admin_number=#{adminNumber}
+    </select>
+
+    <select id="findAllNumber" resultType="string">
+        select admin_number
+        from tb_admin;
+    </select>
+
+
+    <select id="findNumberByadminId" parameterType="Integer" resultType="string">
+        select admin_number
+        from tb_admin
+        where id=#{adminId}
+    </select>
+
+
+
+
+</mapper>

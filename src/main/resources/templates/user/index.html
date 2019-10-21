@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>用户--首页</title>
+    <link rel="icon" data-th-href="@{/common/img/favicon.png}" type="image/png">
+    <link rel="stylesheet" data-th-href="@{/common/css/base.css}">
+    <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/admin-lte/2.4.10/css/AdminLTE.min.css">
+</head>
+<script type="text/css">
+    html {
+        height: 100%;
+    }
+    body {
+        min-height: 100%;
+        display: grid;
+        grid-template-rows: 1fr auto;
+    }
+    .footer {
+        grid-row-start: 2;
+        grid-row-end: 3;
+    }
+
+</script>
+<body>
+<div id="app">
+    <div :class="'app-wrapper' + sidebarFlag">
+        <div th:replace="user/common/side"></div>
+        <el-container class="main-container">
+            <div style="background-color: rgb(84, 92, 100);" th:replace="user/common/header"></div>
+
+            <!-- main -->
+            <el-main class="app-main">
+                <div>
+                    <section class="content">
+                        <div align="center" class="error-page">
+                            <h2 class="headline text-yellow">廉政档案</h2>
+                        </div>
+                    </section>
+                </div>
+                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+            </el-main>
+        </el-container>
+    </div>
+</div>
+<div class="footer" align="center" style="font-size:20px;">
+    <div>
+        <footer>
+            <b>Version</b> 1.0<br/>
+        </footer>
+    </div>
+    <div>
+        <strong>Copyright &copy; 2019 &emsp;<a href="#">Aiot-lab</a></strong> &emsp;All
+        rights reserved.
+    </div>
+
+</body>
+<div th:replace="user/common/js"></div>
+<script type="text/javascript" th:src="@{/common/js/user/index.js}"></script>
+</html>

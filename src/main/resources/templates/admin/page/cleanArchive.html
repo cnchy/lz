@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="admin/common/head"></head>
+<title>个人动态管理</title>
+<link rel="stylesheet" th:href="@{/common/css/links.css}">
+
+<body>
+<!-- vue入口 -->
+<div id="app">
+    <div :class="'app-wrapper' + sidebarFlag">
+        <!-- aside -->
+        <div th:replace="admin/common/side"></div>
+
+        <!-- container -->
+        <el-container class="main-container">
+            <!-- header -->
+            <div style="background-color: rgb(84, 92, 100);" th:replace="admin/common/header"></div>
+
+            <!-- main -->
+            <el-main class="app-main">
+                <el-card>
+                    <h2>个人动态管理</h2>
+                    <!-- 功能按钮 -->
+                    <el-row :gutter="20">
+                        <el-col :xs="12" :sm="12" :lg="6" :span="6" style="display: flex">
+                            <el-input placeholder="请输入教工姓名查询" size="small" v-model="searchEntity.userName"
+                                      @keyup.native="search(pageConf.pageCode, pageConf.pageSize)">
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
+                            <el-button @click="search(pageConf.pageCode, pageConf.pageSize)" plain size="small"
+                                       style="margin-left:12px;" icon="el-icon-search"></el-button>
+                        </el-col>
+                        <el-col :xs="12" :sm="12" :lg="6" :span="6" style="float: right;text-align: right">
+                            <el-button type="primary" plain size="small"
+                                       @click="search(pageConf.pageCode, pageConf.pageSize)" icon="el-icon-refresh">
+                            </el-button>
+                        </el-col>
+                    </el-row>
+                    <br />
+                    <!-- 列表 -->
+                    <el-table ref="link" :data="cleanArchives" border tooltip-effect="dark" style="width: 100%">
+                        <el-table-column align="center" type="index" width="80"></el-table-column>
+                        <el-table-column align="center" prop="userName" sortable label="用户姓名" width="170" show-overflow-tooltip></el-table-column>
+                        <el-table-column align="center" prop="shoushou" label="收受红包、礼金、有价证券及其他受馈赠的情况" width="170" show-overflow-tooltip></el-table-column>
+                        <el-table-column align="center" prop="geren" label="个人操办婚丧嫁娶报备及执行情况" width="170" show-overflow-tooltip></el-table-column>
+                        <el-table-column align="center" prop="peiou" label="配偶及成年子女就业及所在国籍情况" width="170" show-overflow-tooltip></el-table-column>
+                        <el-table-column align="center" prop="zaiqi" label="个人在企业、社会及其酬取情况" width="170" show-overflow-tooltip></el-table-column>
+                        <el-table-column align="center" prop="shifou" label="个人是否参与涉矿、涉矿企业经营活动或参与分红情况" width="170" show-overflow-tooltip></el-table-column>
+                        <el-table-column align="center" prop="niandu" label="个人年度科研经费入账使用及财务个人借款情况" width="170" show-overflow-tooltip></el-table-column>
+                        <el-table-column align="center" prop="yinsi" label="个人因私出入国（境）情况" width="170" show-overflow-tooltip></el-table-column>
+                        <el-table-column align="center" prop="createTime" sortable :formatter="dateFormat" label="创建时间" width="170"></el-table-column>
+                        <el-table-column align="center" prop="lastEditTime" sortable :formatter="dateFormat" label="最后编辑时间" width="170"></el-table-column>
+                        <el-table-column align="center" prop="enableStatus" sortable label="状态" width="120">
+                            <template slot-scope="scope">
+                                <el-tag v-if="scope.row.enableStatus == 1">审核通过</el-tag>
+                                <el-tag type="success" v-if="scope.row.enableStatus == 2">待审核</el-tag>
+                                <el-tag type="danger" v-if="scope.row.enableStatus == 3">未通过审核</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作" align="center">
+                            <template slot-scope="scope">
+                                <el-button style="margin-left:0;" size="mini" icon="el-icon-edit" type="warning"
+                                           @click="handleEdit(scope.row.id)">编辑</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <br />
+                    <!-- 分页 -->
+                    <div class="pagination">
+                        <el-pagination background @size-change="handleSizeChange"
+                                       @current-change="handleCurrentChange" :current-page="pageConf.pageCode"
+                                       :page-sizes="pageConf.pageOption" :page-size="pageConf.pageSize"
+                                       layout="total, sizes, prev, pager, next, jumper" :total="pageConf.totalPage">
+                        </el-pagination>
+                    </div>
+                </el-card>
+            </el-main>
+        </el-container>
+    </div>
+
+    <!-- 编辑 -->
+    <el-dialog title="编辑信息" :visible.sync="editDialog" width="50%" :append-to-body='true'
+               :before-close="handleEditClose">
+            <span>
+                <el-form :inline="true" :model="editor">
+                    <el-form-item prop="userName" label="姓名">
+                        <el-input style="width: 100px" :disabled="true" v-model="editor.userName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="状态">
+                        <el-select v-model="editor.enableStatus" style="width: 120px">
+                            <el-option label="审核通过" :value="1"></el-option>
+                            <el-option label="待审核" :value="2"></el-option>
+                            <el-option label="未通过审核" :value="3"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item prop="shoushou" label="收受红包、礼金、有价证券及其他受馈赠的情况">
+                        <el-input type="textarea" style="width: 550px" autosize placeholder="请输入内容" v-model="editor.shoushou"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="geren" label="个人操办婚丧嫁娶报备及执行情况">
+                        <el-input type="textarea" style="width: 550px" autosize placeholder="请输入内容" v-model="editor.geren"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="peiou" label="配偶及成年子女就业及所在国籍情况">
+                        <el-input type="textarea" style="width: 550px" autosize placeholder="请输入内容" v-model="editor.peiou"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="zaiqi" label="个人在企业、社会及其酬取情况">
+                        <el-input type="textarea" style="width: 550px" autosize placeholder="请输入内容" v-model="editor.zaiqi"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="shifou" label="个人是否参与涉矿、涉矿企业经营活动或参与分红情况">
+                        <el-input type="textarea" style="width: 550px" autosize placeholder="请输入内容" v-model="editor.shifou"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="niandu" label="个人年度科研经费入账使用及财务个人借款情况">
+                        <el-input type="textarea" style="width: 550px" autosize placeholder="请输入内容" v-model="editor.niandu"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="yinsi" label="个人因私出入国（境）情况">
+                        <el-input type="textarea" style="width: 550px" autosize placeholder="请输入内容" v-model="editor.yinsi"></el-input>
+                    </el-form-item>
+                </el-form>
+            </span>
+        <span slot="footer" class="dialog-footer">
+                <el-button @click="editDialog = false">取 消</el-button>
+                <el-button type="primary" @click="edit">确 定</el-button>
+            </span>
+    </el-dialog>
+</div>
+</body>
+<div th:replace="admin/common/js"></div>
+<script type="text/javascript" th:src="@{/common/js/admin/cleanArchive.js}"></script>
+
+</html>

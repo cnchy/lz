@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iotlab.integrityarchives.dao.UserDao">
+
+
+
+    <!-- 插入一个用户并返回id赋值给主键 -->
+    <insert id="insertUserReturnId" parameterType="com.iotlab.integrityarchives.entity.User" >
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into tb_user (id, user_number, user_passwd, name, create_time, last_edit_time, enable_status)
+        values (#{id}, #{userNumber}, #{userPasswd},#{name},#{createTime},#{lastEditTime},#{enableStatus})
+    </insert>
+
+    <select id="countUserNumber" parameterType="String" resultType="int">
+        select count(user_number)
+        from tb_user
+        where user_number=#{userNumber}
+    </select>
+
+
+    <select id="findAllNumber" resultType="string">
+        select user_number
+        from tb_user;
+    </select>
+    
+    <select id="findUserById" parameterType="Integer" resultType="com.iotlab.integrityarchives.entity.User">
+        select * from tb_user where id=#{id}
+    </select>
+
+
+    <select id="findNumberByuserId" parameterType="Integer" resultType="string">
+        select user_number
+        from tb_user
+        where id=#{userId}
+    </select>
+
+
+
+</mapper>
