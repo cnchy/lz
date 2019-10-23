@@ -111,8 +111,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo> implements Us
         dataMap.put("jianli", userInfo.getResume());
 
         List<Map<String, Object>> listInfo = new ArrayList<>();
-        Map<String, Object> map = new HashMap<>();
+
         for (UserFamily userFamily : userFamilyList) {
+            Map<String, Object> map = new HashMap<>();
             CommonUtil.checkNull(userFamily);
             map.put("chengwei", userFamily.getAppellation());
             map.put("name", userFamily.getUserFamilyName());
