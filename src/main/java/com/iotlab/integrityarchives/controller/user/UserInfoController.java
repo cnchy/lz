@@ -6,11 +6,13 @@ import com.iotlab.integrityarchives.dto.UserInfoResult;
 import com.iotlab.integrityarchives.entity.UserFamily;
 import com.iotlab.integrityarchives.entity.UserInfo;
 import com.iotlab.integrityarchives.service.UserInfoService;
+import com.iotlab.integrityarchives.util.CommonUtil;
 import com.iotlab.integrityarchives.util.FilePathUtil;
 
 import com.iotlab.integrityarchives.util.PrintUtil;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +30,12 @@ public class UserInfoController extends BaseController {
 
     @Autowired
     private UserInfoService userInfoService;
+
+    @Value("${file.user-info-template-dir}")
+    private String userInfoTemplateDir;
+
+    @Value("${file.info-table-file-name}")
+    private String infoTableFileName;
 
     @GetMapping(value = "/findByUserId")
     public ResponseCode findByUserId(@RequestParam("userId") Integer userId) {
@@ -57,12 +65,11 @@ public class UserInfoController extends BaseController {
     public void printUserInfo(@RequestParam("userId") Integer userId, HttpServletResponse response) {
         //Map<String, Object> dataMap = new HashMap<String, Object>();
         UserInfo userInfo = userInfoService.ExportUserInfo(userId);
-        System.out.print("userInfo信息为："+userInfo);
+        CommonUtil.checkNull(userInfo);
         List<UserFamily> userFamilyList = userInfo.getUserFamilyList();
         try {
             Map<String, Object> dataMap = userInfoService.exportUserInfoToWordFile(userInfo);
-           /* PrintUtil.exportMillCertificateWord(response, dataMap, "d:/", "领导干部个人廉政档案信息表.ftl", userInfo.getName());*/
-            PrintUtil.exportMillCertificateWord(response, dataMap, "d:/", "干部信息表.ftl", userInfo.getName(),1);
+            PrintUtil.exportMillCertificateWord(response, dataMap, userInfoTemplateDir, infoTableFileName, userInfo.getName(),1);
         } catch (IOException e) {
             e.printStackTrace();
          System.out.println("遇到错误了");
@@ -76,6 +83,7 @@ public class UserInfoController extends BaseController {
         //Map<String, Object> dataMap = new HashMap<String, Object>();
         UserInfoResult userInfoResult = userInfoService.ExportUserInfoResult(userId);
         try {
+            CommonUtil.checkNull(userInfoResult);
             Map<String, Object> dataMap = userInfoService.exportUserInfoResultToWordFile(userInfoResult);
             PrintUtil.exportMillCertificateWord(response, dataMap, "d:/", "领导干部个人廉政档案信息表.ftl", userInfoResult.getName(),2);
         } catch (IOException e) {

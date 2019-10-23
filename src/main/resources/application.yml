@@ -62,3 +62,7 @@ logging:
 application:
   #文件上传路径
   profile: F:/IntegrityArchivesUpload/
+
+file:
+  user-info-template-dir: ./
+  info-table-file-name: 干部信息表.ftl

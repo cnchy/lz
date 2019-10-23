@@ -9,6 +9,7 @@ import com.iotlab.integrityarchives.entity.PersonDecla;
 import com.iotlab.integrityarchives.entity.UserFamily;
 import com.iotlab.integrityarchives.entity.UserInfo;
 import com.iotlab.integrityarchives.service.UserInfoService;
+import com.iotlab.integrityarchives.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -112,6 +113,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo> implements Us
         List<Map<String, Object>> listInfo = new ArrayList<>();
         Map<String, Object> map = new HashMap<>();
         for (UserFamily userFamily : userFamilyList) {
+            CommonUtil.checkNull(userFamily);
             map.put("chengwei", userFamily.getAppellation());
             map.put("name", userFamily.getUserFamilyName());
             map.put("age", userFamily.getAge());
@@ -131,6 +133,8 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo> implements Us
     public Map<String, Object> exportUserInfoResultToWordFile(UserInfoResult userInfoResult) {
         CleanArchive cleanArchive = userInfoResult.getCleanArchive();
         PersonDecla personDecla = userInfoResult.getPersonDecla();
+        CommonUtil.checkNull(personDecla);
+        CommonUtil.checkNull(cleanArchive);
         Map<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("name", userInfoResult.getName());
         dataMap.put("gender", userInfoResult.getGender());
