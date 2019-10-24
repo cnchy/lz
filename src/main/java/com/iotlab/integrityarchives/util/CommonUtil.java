@@ -1,9 +1,17 @@
 package com.iotlab.integrityarchives.util;
 
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Base64;
 
 public class CommonUtil {
 
@@ -35,6 +43,30 @@ public class CommonUtil {
             }
         }
         return obj;
+    }
+
+    public static String image2Base64(String url) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+
+        InputStream is = null;
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();;
+
+        Request request = new Request.Builder().url(url).build();
+        Call call = okHttpClient.newCall(request);
+        try{
+            Response response = call.execute();
+            byte[] buf = new byte[2048];
+            int len = 0;
+            is = response.body().byteStream();
+            while ((len = is.read(buf)) != -1) {
+                outStream.write(buf, 0, len);
+            }
+            final Base64.Encoder encoder = Base64.getEncoder();
+            return encoder.encodeToString(outStream.toByteArray());
+        } catch (IOException ex) {
+            return "";
+        }
+
     }
 
 }

@@ -110,6 +110,10 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo> implements Us
         dataMap.put("xianren", userInfo.getCurrentPosition());
         dataMap.put("jianli", userInfo.getResume());
 
+        String url = userInfo.getAvatar();
+        dataMap.put("imgName", "img");
+        dataMap.put("imgBinaryData", getFormatString(CommonUtil.image2Base64(url)));
+
         List<Map<String, Object>> listInfo = new ArrayList<>();
 
         for (UserFamily userFamily : userFamilyList) {
@@ -165,5 +169,17 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo> implements Us
         return dataMap;
     }
 
-
+    private static String getFormatString(String str) {
+        StringBuffer sb = new StringBuffer(str.length());
+        int count = 0;
+        for (int i = 0; i < str.length(); ++i) {
+            if (count == 76) {
+                sb.append('\n');
+                count = 0;
+            }
+            sb.append(str.charAt(i));
+            count ++;
+        }
+        return sb.toString();
+    }
 }
