@@ -39,7 +39,7 @@ public class UserInfoController extends BaseController {
 
     @GetMapping(value = "/findByUserId")
     public ResponseCode findByUserId(@RequestParam("userId") Integer userId) {
-        return ResponseCode.success(userInfoService.ExportUserInfo(userId));
+        return ResponseCode.success(CommonUtil.checkNull(userInfoService.ExportUserInfo(userId)));
     }
 
     @PostMapping("/update")

@@ -7,6 +7,7 @@ import com.iotlab.integrityarchives.entity.PersonDecla;
 import com.iotlab.integrityarchives.entity.PersonDecla;
 import com.iotlab.integrityarchives.enums.EnableStatusEnum;
 import com.iotlab.integrityarchives.service.PersonDeclaService;
+import com.iotlab.integrityarchives.util.CommonUtil;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,7 @@ public class PersonDeclaManageController extends BaseController {
 
     @GetMapping(value = "/findByUserId")
     public ResponseCode findByUserId(@RequestParam("userId") Integer userId) {
-        return ResponseCode.success(personDeclaService.findByUserId(userId));
+        return ResponseCode.success(CommonUtil.checkNull(personDeclaService.findByUserId(userId)));
     }
 
     @GetMapping(value = "/findById")

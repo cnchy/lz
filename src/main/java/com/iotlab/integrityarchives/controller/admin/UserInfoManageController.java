@@ -6,6 +6,7 @@ import com.iotlab.integrityarchives.dto.UserInfoResult;
 import com.iotlab.integrityarchives.entity.UserFamily;
 import com.iotlab.integrityarchives.entity.UserInfo;
 import com.iotlab.integrityarchives.service.UserInfoService;
+import com.iotlab.integrityarchives.util.CommonUtil;
 import com.iotlab.integrityarchives.util.FilePathUtil;
 
 import com.iotlab.integrityarchives.util.PrintUtil;
@@ -40,7 +41,7 @@ public class UserInfoManageController extends BaseController {
 
     @GetMapping(value = "/findByUserId")  //TODO   根据UserId查询的时候查不到数据的时候返回ResponseCode.error()
     public ResponseCode findByUserId(@RequestParam("userId") Integer userId) {
-        return ResponseCode.success(userInfoService.ExportUserInfo(userId));
+        return ResponseCode.success(CommonUtil.checkNull(userInfoService.ExportUserInfo(userId)));
     }
 
     //导出word

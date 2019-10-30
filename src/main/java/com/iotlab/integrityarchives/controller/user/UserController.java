@@ -7,6 +7,7 @@ import com.iotlab.integrityarchives.entity.UserInfo;
 import com.iotlab.integrityarchives.enums.EnableStatusEnum;
 import com.iotlab.integrityarchives.service.UserInfoService;
 import com.iotlab.integrityarchives.service.UserService;
+import com.iotlab.integrityarchives.util.CommonUtil;
 import com.iotlab.integrityarchives.util.Md5Util;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class UserController extends BaseController {
      */
     @GetMapping(value = "/findById")
     public ResponseCode findById(@RequestParam("id") Integer id) {
-        return ResponseCode.success(userService.findById(id));
+        return ResponseCode.success(CommonUtil.checkNull(userService.findById(id)));
     }
 
     @PostMapping("/update")

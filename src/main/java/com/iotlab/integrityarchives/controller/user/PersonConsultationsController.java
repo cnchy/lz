@@ -11,6 +11,7 @@ import com.iotlab.integrityarchives.enums.EnableStatusEnum;
 import com.iotlab.integrityarchives.service.CleanArchiveService;
 import com.iotlab.integrityarchives.service.PersonConsultationsService;
 import com.iotlab.integrityarchives.service.UserService;
+import com.iotlab.integrityarchives.util.CommonUtil;
 import com.iotlab.integrityarchives.util.FileType;
 
 import io.swagger.annotations.Api;
@@ -47,7 +48,7 @@ public class PersonConsultationsController extends BaseController {
 
     @GetMapping(value = "/findByUserId")
     public ResponseCode findByUserId(@RequestParam("userId") Integer userId) {
-        return ResponseCode.success(personConsultationsService.findByUserId(userId));
+        return ResponseCode.success(CommonUtil.checkNull(personConsultationsService.findByUserId(userId)));
     }
 
     @PostMapping(value = "/upload")

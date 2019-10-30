@@ -2,15 +2,14 @@ var app = new Vue({
     el: '#app',
     data: {
     	years:[],
-    	infos: [{
+    	infos: {
             id: '',
             userId: '',
             year: '',
             path: ''
-        }],
+        },
         userId: '',
-        changePasswdDialog: false,
-        defaultActive: '2',
+        defaultActive: '5',
         mobileStatus: false, //是否是移动端
         sidebarStatus: true, //侧边栏状态，true：打开，false：关闭
         sidebarFlag: ' openSidebar ', //侧边栏标志

@@ -14,6 +14,7 @@ import com.iotlab.integrityarchives.service.PersonConsultationsService;
 import com.iotlab.integrityarchives.service.PersonDeclaService;
 import com.iotlab.integrityarchives.service.UserInfoService;
 import com.iotlab.integrityarchives.service.UserService;
+import com.iotlab.integrityarchives.util.CommonUtil;
 import com.iotlab.integrityarchives.util.FileType;
 import com.iotlab.integrityarchives.util.Md5Util;
 import io.swagger.annotations.Api;
@@ -65,7 +66,7 @@ public class UserManageController extends BaseController {
      */
     @GetMapping(value = "/findById")
     public ResponseCode findById(@RequestParam("id") Integer id) {
-        return ResponseCode.success(userService.findById(id));
+        return ResponseCode.success(CommonUtil.checkNull(userService.findById(id)));
     }
 
     /**

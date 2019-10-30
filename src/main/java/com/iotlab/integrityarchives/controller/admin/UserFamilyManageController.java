@@ -5,6 +5,7 @@ import com.iotlab.integrityarchives.common.controller.BaseController;
 import com.iotlab.integrityarchives.dto.ResponseCode;
 import com.iotlab.integrityarchives.entity.UserFamily;
 import com.iotlab.integrityarchives.service.UserFamilyService;
+import com.iotlab.integrityarchives.util.CommonUtil;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class UserFamilyManageController extends BaseController {
 
     @GetMapping(value = "/findByUserId")
     public ResponseCode findByUserId(@RequestParam("userId") Integer userId) {
-        return ResponseCode.success(userFamilyService.findByUserId(userId));
+        return ResponseCode.success(CommonUtil.checkNull(userFamilyService.findByUserId(userId)));
     }
 
     @GetMapping(value = "/findById")
