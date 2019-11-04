@@ -23,6 +23,8 @@ public interface PersonConsultationsDao extends MyMapper<PersonConsultations> {
 
 	void save(PersonConsultations personConsultations);
 
+	void update(PersonConsultations personConsultations);
+
 	PersonConsultations findByUserIdAndYear(PersonConsultations personConsultations);
 
 	void del(int parseInt);

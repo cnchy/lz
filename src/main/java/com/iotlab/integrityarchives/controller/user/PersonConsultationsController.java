@@ -20,6 +20,8 @@ import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,6 +48,9 @@ public class PersonConsultationsController extends BaseController {
 	@Autowired
 	private UserService userService;
 
+	// 廉政材料上传绝对路径
+    private final static String personConsulationDir = System.getProperty("user.dir") + "/";
+
     @GetMapping(value = "/findByUserId")
     public ResponseCode findByUserId(@RequestParam("userId") Integer userId) {
         return ResponseCode.success(CommonUtil.checkNull(personConsultationsService.findByUserId(userId)));
@@ -57,14 +62,10 @@ public class PersonConsultationsController extends BaseController {
         String userName=userService.findUserById(userId).getName();
         String fileName = file.getOriginalFilename();//文件原始名称
         //拼接原来的文件名
-        fileName = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date())+"-"+userName+"-"+year+"年个人述职述联文件"+fileName.substring(fileName.lastIndexOf("."));//自定义名称防止上传文件名冲突
+        fileName = userName+"-"+year+"年个人述职述联文件"+fileName.substring(fileName.lastIndexOf("."));//自定义名称防止上传文件名冲突
 
-        String filePath = MyConfig.getProfile();
-        if(os.toLowerCase().startsWith("linux")){
-            filePath="/usr/upload/";
-        }
-        System.out.print("从配置文件中得到的路径为:"+filePath);
-        File dest = new File(filePath + fileName);
+        System.out.print("从配置文件中得到的路径为:" + personConsulationDir);
+        File dest = new File(personConsulationDir + fileName);
         try {
             file.transferTo(dest);
             //上传成后记录到数据库中    id,user_id,year,path
@@ -72,6 +73,7 @@ public class PersonConsultationsController extends BaseController {
             personConsultations.setUserId(userId);
             personConsultations.setYear(year);
             personConsultations.setPath(dest.getAbsolutePath());
+            System.out.println(dest.getCanonicalPath());
             personConsultations.setName(userName);
             personConsultationsService.save(personConsultations);
         } catch (IOException e) {

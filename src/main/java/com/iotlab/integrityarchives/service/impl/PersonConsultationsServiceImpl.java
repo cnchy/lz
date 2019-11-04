@@ -36,7 +36,9 @@ public class PersonConsultationsServiceImpl extends BaseServiceImpl<PersonConsul
 
 	@Override
 	public void save(PersonConsultations personConsultations) {
-		personConsultationsDao.save(personConsultations);
+        if (personConsultationsDao.findByUserIdAndYear(personConsultations) != null)
+            personConsultationsDao.update(personConsultations);
+        else personConsultationsDao.save(personConsultations);
 	}
 
 	@Override

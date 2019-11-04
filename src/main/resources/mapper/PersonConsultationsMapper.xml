@@ -27,6 +27,10 @@
     <delete id="del">
     	delete from tb_person_consultations where id=#{id}
     </delete>
+
+    <update id="update" parameterType="com.iotlab.integrityarchives.entity.PersonConsultations">
+        update tb_person_consultations set path = #{path}, name = #{name} where user_id = #{userId} and year = #{year}
+    </update>
     
 
 </mapper>

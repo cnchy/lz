@@ -1,7 +1,21 @@
 var app = new Vue({
     el: '#app',
     data: {
-    	years:[],
+        // 需要后台提供数据
+        my_options: [{
+            label: '个人述廉材料上传',
+            value: '1'
+        }],
+        value: '',
+        isSubmit: false,
+        openTime: '',
+        attentions: '',
+
+        years:[],
+
+        // 该页面的全局变量
+        year: new Date().getFullYear().toString(),
+
     	infos: {
             id: '',
             userId: '',
@@ -13,10 +27,6 @@ var app = new Vue({
         mobileStatus: false, //是否是移动端
         sidebarStatus: true, //侧边栏状态，true：打开，false：关闭
         sidebarFlag: ' openSidebar ', //侧边栏标志
-        uploaddata: {
-        	userId: '',
-        	year: ''
-        },
     },
     created() {
         window.onload = function () {
@@ -33,6 +43,35 @@ var app = new Vue({
         this.$refs.loader.style.display = 'none';
     },
     methods: {
+        onSubmit() {
+            try {
+                let files = document.getElementById('file').files;
+                this._checkUploadFile(files, this.value);
+                this._uploadFile(files[0], window.localStorage.userId, this.year, this._uploadFileSucccess);
+            } catch (e) {
+                alert(e);
+            }
+        },
+
+        _checkUploadFile(files, value) {
+            if (files.length === 0) throw new Error("请选择文件");
+            if (value !== '1') throw new Error("请选择填报类型");
+        },
+
+        _uploadFile(file, userId, year, successFunc) {
+            let param = new FormData();
+            param.append('file', file);
+            param.append('userId', userId);
+            param.append('year', year);
+
+            axios.post('personConsultations/upload', param).then(_ => (successFunc(_)));
+        },
+
+        _uploadFileSucccess() {
+            alert("填报成功");
+            this.getUserInfo(this.userId);
+        },
+
         logout() {
             window.location.href = api.common.logout //更改了密码，注销当前登录状态，重新登录
         },
@@ -42,14 +81,8 @@ var app = new Vue({
                 type: type
             })
         },
-        uploadWord(year) {
-        	this.uploaddata.userId = window.localStorage.userId;
-            this.uploaddata.year = year;
-        	
-        },
-        downloadWord(year) {
-            //window.open(api.personConsultations.downloadWord(this.userId),"_blank");
-        	window.open(api.personConsultations.downloadWord(this.userId,year));
+        downloadWord() {
+        	window.open(api.personConsultations.downloadWord(this.userId, this.year));
         },
         //获取当前用户信息
         getUserInfo(userId) {
@@ -59,6 +92,7 @@ var app = new Vue({
                 	var info = this.infos[i];
                 	this.years.push(info.year);
                 }
+                this.isSubmit = this.download();
             });
         },
 
@@ -138,25 +172,11 @@ var app = new Vue({
             this.sidebarStatus = false;
             this.sidebarFlag = ' hideSidebar mobile '
         },
-        upload(year) {
-            if(this.years.indexOf(year) == -1){
+        download() {
+            if(this.years.indexOf(this.year) != -1){
             	return true;
             }
-        },
-        download(year) {
-            if(this.years.indexOf(year) != -1){
-            	return true;
-            }
-        },
-        beforeRemove(file, fileList) {
-        	return this.$confirm(`确定移除 ${ file.name }？`);
-        },
-        beforeUpload(file) {
-        	const isJPG = file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.type === 'application/msword';
-            if (!isJPG) {
-              this.$message.error('上传必须是word格式!');
-            }
-            return isJPG;
+            return false;
         }
     },
 });
