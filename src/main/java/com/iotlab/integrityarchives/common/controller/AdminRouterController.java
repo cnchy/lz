@@ -47,6 +47,11 @@ public class AdminRouterController {
     public String personConsultations() {
         return "admin/page/personConsultations";
     }
+
+    @GetMapping(value = {"/personConsultationsManage"})
+    public String personConsultationsManage() {
+        return "admin/page/personConsultationsManage";
+    }
     
     @GetMapping(value = {"/cleanArchive"})
     public String cleanArchive() {

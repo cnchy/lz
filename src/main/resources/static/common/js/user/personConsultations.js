@@ -9,7 +9,7 @@ var app = new Vue({
         value: '',
         isSubmit: false,
         openTime: '',
-        attentions: '',
+        attention: '',
 
         years:[],
 
@@ -38,11 +38,27 @@ var app = new Vue({
         document.getElementById("header-user").innerHTML = window.localStorage.getItem("userName") + ",你好";
         this.userId = window.localStorage.userId;
         this.getUserInfo(this.userId);
+        this.getConsulation();
     },
     mounted() {
         this.$refs.loader.style.display = 'none';
     },
     methods: {
+        getConsulation() {
+            axios.get('/user/personConsultations/getConsulation').then(response => {
+                if (response.data.code !== 200) this._notify(response.data.msg);
+                else {
+                    if (response.data.data.on) {
+                        this.openTime = "临时开放中......";
+                    } else {
+                        this.openTime = response.data.data.dateStart + "  至  " + response.data.data.dateEnd;
+                    }
+                    this.attention = response.data.data.attention.replace(/\n/,"<br/>");
+                }
+
+            }).catch(error => (this._notify("获取开放时间， 注意事项信息失败", "error")));
+        },
+
         onSubmit() {
             try {
                 let files = document.getElementById('file').files;

@@ -1,5 +1,6 @@
 package com.iotlab.integrityarchives.controller.user;
 
+import com.alibaba.fastjson.JSONObject;
 import com.iotlab.integrityarchives.common.controller.BaseController;
 import com.iotlab.integrityarchives.config.MyConfig;
 import com.iotlab.integrityarchives.dto.QueryPage;
@@ -8,7 +9,9 @@ import com.iotlab.integrityarchives.entity.Admin;
 import com.iotlab.integrityarchives.entity.CleanArchive;
 import com.iotlab.integrityarchives.entity.PersonConsultations;
 import com.iotlab.integrityarchives.enums.EnableStatusEnum;
+import com.iotlab.integrityarchives.enums.StatusEnums;
 import com.iotlab.integrityarchives.service.CleanArchiveService;
+import com.iotlab.integrityarchives.service.PersonConsulationsManageService;
 import com.iotlab.integrityarchives.service.PersonConsultationsService;
 import com.iotlab.integrityarchives.service.UserService;
 import com.iotlab.integrityarchives.util.CommonUtil;
@@ -47,9 +50,11 @@ public class PersonConsultationsController extends BaseController {
     private PersonConsultationsService personConsultationsService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+    private PersonConsulationsManageService personConsulationsManageService;
 
 	// 廉政材料上传绝对路径
-    private final static String personConsulationDir = System.getProperty("user.dir") + "/";
+    private final static String personConsulationDir = System.getProperty("user.dir") + "/upload/";
 
     @GetMapping(value = "/findByUserId")
     public ResponseCode findByUserId(@RequestParam("userId") Integer userId) {
@@ -115,4 +120,14 @@ public class PersonConsultationsController extends BaseController {
 		}
     }
 
+    @GetMapping("/getConsulation")
+    public ResponseCode getConsulation() {
+        try {
+            JSONObject jsonObject = personConsulationsManageService.getConsulation();
+            return new ResponseCode(StatusEnums.SUCCESS, jsonObject);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseCode(500, e.toString());
+        }
+    }
 }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="admin/common/head"></head>
+<title>述廉材料上传管理</title>
+<link rel="stylesheet" th:href="@{/common/css/links.css}">
+
+<body>
+    <!-- vue入口 -->
+    <div id="app">
+        <div :class="'app-wrapper' + sidebarFlag">
+            <!-- aside -->
+            <div th:replace="admin/common/side"></div>
+            <!-- container -->
+            <el-container class="main-container">
+                <!-- header -->
+                <div style="background-color: rgb(84, 92, 100);" th:replace="admin/common/header"></div>
+
+                <!-- main -->
+                <el-main class="app-main">
+                    <el-form label-width="80px">
+                        <el-form-item label="填报时间">
+                            <el-col :span="5">
+                                <el-date-picker type="date" placeholder="开始时间" v-model="dateStart" style="width: 100%;"></el-date-picker>
+                            </el-col>
+                            <el-col class="line" :span="1">-</el-col>
+                            <el-col :span="5">
+                                <el-date-picker type="date" placeholder="结束时间" v-model="dateEnd" style="width: 100%;"></el-date-picker>
+                            </el-col>
+                        </el-form-item>
+
+                        <el-form-item label="注意事项">
+                            <el-input type="textarea" v-model="attention" rows="10" cols="15"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="暂时开启">
+                            <el-switch v-model="on"></el-switch>
+                        </el-form-item>
+
+                        <el-form-item>
+                            <el-button @click="onSubmit()">立即提交</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-main>
+            </el-container>
+        </div>
+    </div>
+</body>
+<div th:replace="admin/common/js"></div>
+<script type="text/javascript" th:src="@{/common/js/admin/personConsultationsManage.js}"></script>
+
+</html>
