@@ -62,16 +62,19 @@ public class PersonConsultationsController extends BaseController {
     }
 
     @PostMapping(value = "/upload")
-    public void upload(@RequestParam("file") MultipartFile file, Integer userId, String year) {
-        String os = System.getProperty("os.name");
-        String userName=userService.findUserById(userId).getName();
-        String fileName = file.getOriginalFilename();//文件原始名称
-        //拼接原来的文件名
-        fileName = userName+"-"+year+"年个人述职述联文件"+fileName.substring(fileName.lastIndexOf("."));//自定义名称防止上传文件名冲突
-
-        System.out.print("从配置文件中得到的路径为:" + personConsulationDir);
-        File dest = new File(personConsulationDir + fileName);
+    public ResponseCode upload(@RequestParam("file") MultipartFile file, Integer userId, String year) {
         try {
+            if (!personConsulationsManageService.isOpenTime()) return new ResponseCode(500, "上传通道暂未开放，如有需求请联系管理员");
+
+            String os = System.getProperty("os.name");
+            String userName=userService.findUserById(userId).getName();
+            String fileName = file.getOriginalFilename();//文件原始名称
+            //拼接原来的文件名
+            fileName = userName+"-"+year+"年个人述职述联文件"+fileName.substring(fileName.lastIndexOf("."));//自定义名称防止上传文件名冲突
+
+            System.out.print("从配置文件中得到的路径为:" + personConsulationDir);
+            File dest = new File(personConsulationDir + fileName);
+
             file.transferTo(dest);
             //上传成后记录到数据库中    id,user_id,year,path
             PersonConsultations personConsultations = new PersonConsultations();
@@ -81,8 +84,10 @@ public class PersonConsultationsController extends BaseController {
             System.out.println(dest.getCanonicalPath());
             personConsultations.setName(userName);
             personConsultationsService.save(personConsultations);
-        } catch (IOException e) {
+            return new ResponseCode(StatusEnums.SUCCESS);
+        } catch (Exception e) {
             e.printStackTrace();
+            return new ResponseCode(500, e.toString());
         }
 
 

@@ -63,9 +63,9 @@ var app = new Vue({
             try {
                 let files = document.getElementById('file').files;
                 this._checkUploadFile(files, this.value);
-                this._uploadFile(files[0], window.localStorage.userId, this.year, this._uploadFileSucccess);
+                this._uploadFile(files[0], window.localStorage.userId, this.year);
             } catch (e) {
-                alert(e);
+                this._notify(e, "error");
             }
         },
 
@@ -74,18 +74,22 @@ var app = new Vue({
             if (value !== '1') throw new Error("请选择填报类型");
         },
 
-        _uploadFile(file, userId, year, successFunc) {
+        _uploadFile(file, userId, year) {
             let param = new FormData();
             param.append('file', file);
             param.append('userId', userId);
             param.append('year', year);
 
-            axios.post('personConsultations/upload', param).then(_ => (successFunc(_)));
-        },
-
-        _uploadFileSucccess() {
-            alert("填报成功");
-            this.getUserInfo(this.userId);
+            axios.post('personConsultations/upload', param).then(response => {
+                console.log(response);
+                if (response.data.code !== 200) this._notify(response.data.msg);
+                else {
+                    this._notify("填报成功", "success");
+                    this.getUserInfo(this.userId);
+                }
+            }).catch(error => {
+                this._notify(error, "warning");
+            });
         },
 
         logout() {
