@@ -362,28 +362,30 @@ var app = new Vue({
                 data.append('image', image);
             }
             data.append('id', this.editor.id);
-            if(this.editor.name != '') data.append('name', this.editor.name);
-            if(this.editor.gender != '') data.append('gender', this.editor.gender);
-            if(this.editor.dateOfBirth != '') data.append('dateOfBirth', this.editor.dateOfBirth);
-            if(this.editor.dianhua != '') data.append('dianhua', this.editor.dianhua);
-            if(this.editor.dizhi != '') data.append('dizhi', this.editor.dizhi);
-            if(this.editor.shenfenzheng != '') data.append('shenfenzheng', this.editor.shenfenzheng);
-            if(this.editor.nation != '') data.append('nation', this.editor.nation);
-            if(this.editor.nativePlace != '') data.append('nativePlace', this.editor.nativePlace);
-            if(this.editor.placeOfBirth != '') data.append('placeOfBirth', this.editor.placeOfBirth);
-            if(this.editor.dateOfJoinParty != '') data.append('dateOfJoinParty', this.editor.dateOfJoinParty);
-            if(this.editor.dateOfJoinWork != '') data.append('dateOfJoinWork', this.editor.dateOfJoinWork);
-            if(this.editor.physicalCondition != '') data.append('physicalCondition', this.editor.physicalCondition);
-            if(this.editor.technicalPosition != '') data.append('technicalPosition', this.editor.technicalPosition);
-            if(this.editor.familiarMajorAndSpecialty != '') data.append('familiarMajorAndSpecialty', this.editor.familiarMajorAndSpecialty);
-            if(this.editor.fullTimeDegree != '') data.append('fullTimeDegree', this.editor.fullTimeDegree);
-            if(this.editor.fullTimeGraduatedUniversityAndMajor != '') data.append('fullTimeGraduatedUniversityAndMajor', this.editor.fullTimeGraduatedUniversityAndMajor);
-            if(this.editor.partTimeDegree != '') data.append('partTimeDegree', this.editor.partTimeDegree);
-            if(this.editor.partTimeGraduatedUniversityAndMajor != '') data.append('partTimeGraduatedUniversityAndMajor', this.editor.partTimeGraduatedUniversityAndMajor);
-            if(this.editor.currentPosition != '') data.append('currentPosition', this.editor.currentPosition);
-            if(this.editor.resume != '') data.append('resume', this.editor.resume);
-            if(this.editor.rewardsAndPunishment != '') data.append('rewardsAndPunishment', this.editor.rewardsAndPunishment);
-            if(this.editor.annualAssessmentResults != '') data.append('annualAssessmentResults', this.editor.annualAssessmentResults);
+
+            data.append('name', this.editor.name);
+            data.append('gender', this.editor.gender);
+            data.append('dateOfBirth', this.editor.dateOfBirth);
+            data.append('dianhua', this.editor.dianhua);
+            data.append('dizhi', this.editor.dizhi);
+            data.append('shenfenzheng', this.editor.shenfenzheng);
+            data.append('nation', this.editor.nation);
+            data.append('nativePlace', this.editor.nativePlace);
+            data.append('placeOfBirth', this.editor.placeOfBirth);
+            data.append('dateOfJoinParty', this.editor.dateOfJoinParty);
+            data.append('dateOfJoinWork', this.editor.dateOfJoinWork);
+            data.append('physicalCondition', this.editor.physicalCondition);
+            data.append('technicalPosition', this.editor.technicalPosition);
+            data.append('familiarMajorAndSpecialty', this.editor.familiarMajorAndSpecialty);
+            data.append('fullTimeDegree', this.editor.fullTimeDegree);
+            data.append('fullTimeGraduatedUniversityAndMajor', this.editor.fullTimeGraduatedUniversityAndMajor);
+            data.append('partTimeDegree', this.editor.partTimeDegree);
+            data.append('partTimeGraduatedUniversityAndMajor', this.editor.partTimeGraduatedUniversityAndMajor);
+            data.append('currentPosition', this.editor.currentPosition);
+            data.append('resume', this.editor.resume);
+            data.append('rewardsAndPunishment', this.editor.rewardsAndPunishment);
+            data.append('annualAssessmentResults', this.editor.annualAssessmentResults);
+
             //查询当前id对应的数据
             this.$http.post(api.userInfo.update, data).then(result => {
                 this.reloadList();

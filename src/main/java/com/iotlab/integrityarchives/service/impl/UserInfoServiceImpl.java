@@ -47,7 +47,6 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo> implements Us
                 this.updateNotNull(userInfo);
             } catch (Exception e) {
                 e.printStackTrace();
-                //throw new GlobalException(e.getMessage());
             }
         }
     }

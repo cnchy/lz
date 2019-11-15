@@ -55,6 +55,15 @@ public class UserInfo implements Serializable {
     @Column(name = "place_of_birth")
     private String placeOfBirth;                       //出生地
 
+    @Column(name="dianhua")
+    private String dianhua;                            //电话
+
+    @Column(name="shenfenzheng")
+    private String shenfenzheng;                       //身份证
+
+    @Column(name="dizhi")
+    private String dizhi;                              //地址
+
     @Column(name = "date_of_join_party")
     private String dateOfJoinParty;                     //入党时间
 

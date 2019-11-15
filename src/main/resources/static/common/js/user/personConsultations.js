@@ -53,7 +53,7 @@ var app = new Vue({
                     } else {
                         this.openTime = response.data.data.dateStart + "  至  " + response.data.data.dateEnd;
                     }
-                    this.attention = response.data.data.attention.replace(/\n/,"<br/>");
+                    this.attention = response.data.data.attention.replace(/\n/g,"<br/>");
                 }
 
             }).catch(error => (this._notify("获取开放时间， 注意事项信息失败", "error")));

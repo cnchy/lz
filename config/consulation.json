@@ -1,6 +1,6 @@
 {
-	"dateStart":"2019-11-13 00:00:00",
-	"attention":"1.文件上传格式必须为doc或docx\n2.上传模板请见 xxxxx.docx",
-	"dateEnd":"2019-11-26 00:00:00",
-	"on":false
+	"dateStart":"2019-11-05 00:00:00",
+	"attention":"1.文件上传格式必须为doc或docx；\n2.上传模板请见 xxxxx.docx；\n3.请注意填报时间，错过时间请与管理员联系；填报时间内，可多次提交。",
+	"dateEnd":"2019-11-10 00:00:00",
+	"on":true
 }
